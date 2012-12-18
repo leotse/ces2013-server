@@ -31,6 +31,7 @@ app.get('/', routes.index);
 
 // api routes
 app.get('/api/test', apiRoutes.test);
+app.get('/api/titles', apiRoutes.titles);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

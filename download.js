@@ -1,4 +1,5 @@
-var fs = require('fs')
+var _ = require('underscore')
+,	fs = require('fs')
 ,	events = require('events')
 ,	zlib = require('zlib')
 ,	util = require('util')
@@ -49,61 +50,138 @@ var filename = 'data/catalog.zip'
 
 
 
+
 /////////////
 // Process //
 /////////////
 
-var input = fs.createReadStream(extracted)
-,	selector = new XmlSelector('catalog_title', input);
+var XmlSelector = require('./helpers/xmlselector')
+,	selector = new XmlSelector('catalog_title', extracted)
+,	parser = new xml2js.Parser()
+,	models = require('./models')
+,	Title = models.Title;
 
 selector.on('match', function(xml) {
 
-	//console.log(xml);
+	parser.parseString(xml, function(err, json) {
+		if(err) throw err;
+		else {
 
+			// successfully parsed xml to json!
+			// now we can create a data model with this json and store in db
+			// console.log(util.inspect(json, false, null));
+			saveTitle(json);
+		}
+	});
 });
+
+// start refresh db
+Title.collection.drop();
+selector.process();
+
+
 
 
 /////////////
 // Helpers //
 /////////////
 
-function XmlSelector(tag, stream) {
 
-	// verify input stream
-	if(!stream) throw Error('input stream is required');
-	stream.setEncoding();
-	
+function saveTitle(json) {
 
-	// process stream
-	var self = this
-	,	startTag = util.format('<%s>', tag)
-	,	endTag = util.format('</%s>', tag)
-	,	buffer = ''
-	,	pos = -1
-	,	start = -1
-	,	end = -1
-	,	xml = '';
+	var title = new Title()
+	,	catalogTitle = json.catalog_title
+	,	link = catalogTitle.link
+	,	category = catalogTitle.category;
 
-	stream.on('data', function(data) {
-		buffer += data;
+	// populate the fields
+	title.id = getId();
+	title.title = getTitle();
+	title.releaseYear = getReleaseYear();
+	title.averageRating = getAverageRating();
+	title.updated = getUpdated();
+	title.boxArt = getBoxArt();
+	title.synopsis = getSynopsis();
+	title.synopsisShort = getSynopsisShort();
+	title.people = getPeople();
+	title.similars = getSimilars();
+	title.categories = getCategories();
 
-		while(true) {
-		
-			// find the start and end pos of the tag
-			start = buffer.indexOf(startTag);
-			end = buffer.indexOf(endTag);
-
-			// if both exists, return the xml body and update the buffer
-			console.log(start + ' ' + end);
-			if(start >= 0 && end >= 0) {
-				xml = buffer.substring(start, end + endTag.length);
-				buffer = buffer.substring(end + endTag.length);
-				stream.emit('match', xml);
-			} else {
-				break;
-			}
-		}
+	// save the doc!
+	title.save(function(err, saved) {
+		if(err) throw err;
+		else console.log('saved title: ' + saved.id);
 	});
 
-	return stream;
+
+	// helpers
+	function getId() {
+		return catalogTitle.id[0];
+	}
+
+	function getTitle() {
+		var title = catalogTitle.title[0].$;
+		return {
+			short: title.short,
+			regular: title.regular
+		};
+	}
+
+	function getReleaseYear() {
+		return catalogTitle.release_year[0];
+	}
+
+	function getAverageRating() {
+		return catalogTitle.average_rating[0];
+	}
+
+	function getUpdated() {
+		return catalogTitle.updated[0];
+	}
+
+	function getBoxArt() {
+		var node = _.find(link, function(l) { return l.box_art; });
+		return _.map(node.box_art[0].link, function(boxart) { 
+			return {
+				title: boxart.$.title,
+				url: boxart.$.href
+			};
+		});
+	}
+
+	function getSynopsis() {
+		var node = _.find(link, function(l) { return l.synopsis; });
+		return node.synopsis[0];
+	}
+
+	function getSynopsisShort() {
+		var node = _.find(link, function(l) { return l.short_synopsis; });
+		return node.short_synopsis[0];
+	}
+
+	function getPeople() {
+		var node = _.find(link, function(l) { return l.people; });
+		if(node) {
+			return _.map(node.people[0].link, function(person) { return person.$.title });
+		} else {
+			return [];
+		}
+	}
+
+	function getSimilars() {
+		var node = _.find(link, function(l) { return l.$ && l.$.title === 'similars'; });
+		return node.$.href;
+	}
+
+	function getCategories() {
+		return _.map(category, function(cat) { return cat.$.term.toLowerCase(); });
+	}
 }
+
+
+
+
+
+
+
+
