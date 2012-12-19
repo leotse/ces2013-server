@@ -52,6 +52,24 @@ routes.titles = function(req, res) {
 	});
 };
 
+
+// get title details
+routes.title = function(req, res) {
+
+	var params = req.params
+	,	id = params.id;
+
+	// check id input
+	if(!id) helpers.sendError(res, new Error('invalid id'));
+
+	// return title by id
+	Title.findById(id, function(err, title) {
+		if(err) helpers.sendError(res, err);
+		else if(!title) helpers.sendError(res, new Error('title not found'));
+		else helpers.send(res, title);
+	});
+}
+
 // get movies
 routes.movies = function(req, res) {
 
