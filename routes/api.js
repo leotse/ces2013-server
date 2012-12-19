@@ -9,6 +9,7 @@ var routes = {}
 
 
 var PAGE_SIZE = 10;
+var FIELDS = '_id synopsis synopsisShort updated averageRating releaseYear categories people boxart title';
 
 
 // test an api path
@@ -44,6 +45,7 @@ routes.titles = function(req, res) {
 	.sort('-releaseYear')
 	.skip(skip)
 	.limit(limit)
+	.select(FIELDS)
 	.exec(function(err, titles) {
 		if(err) helpers.sendError(res, err);
 		else helpers.send(res, titles);
@@ -63,6 +65,7 @@ routes.movies = function(req, res) {
 	.sort('-releaseYear')
 	.skip(skip)
 	.limit(limit)
+	.select(FIELDS)
 	.exec(function(err, titles) {
 		if(err) helpers.sendError(res, err);
 		else helpers.send(res, titles);
@@ -83,6 +86,7 @@ routes.tvshows = function(req, res) {
 	.sort('-releaseYear')
 	.skip(skip)
 	.limit(limit)
+	.select(FIELDS)
 	.exec(function(err, titles) {
 		if(err) helpers.sendError(res, err);
 		else helpers.send(res, titles);
@@ -118,7 +122,8 @@ routes.genres = function(req, res) {
 	dbquery
 	.sort('-releaseYear')
 	.skip(skip)
-	.limit(limit);
+	.limit(limit)
+	.select(FIELDS);
 
 
 	// execute query
@@ -126,8 +131,56 @@ routes.genres = function(req, res) {
 		if(err) helpers.sendError(res, err);
 		else helpers.send(res, titles);
 	});
+};
 
-}
+
+// get similar
+routes.similar = function(req, res) {
+
+	var id = req.params.id;
+
+	// first retrieve the title
+	Title.findById(id, function(err, title) {
+		if(err) helpers.sendError(res, err);
+		else if(!title) helpers.sendError(res, new Error('title not found'));
+		else {
+
+			// we now have the title
+			// get similar items by looking at categories
+			var categories = title.categories.slice(1, title.categories.length - 2);
+
+			// also page the query
+			var query = req.query
+			,	mode = query.mode
+			,	page = query.page || 1
+			,	limit = query.limit || PAGE_SIZE
+			,	skip = (page - 1) * limit;
+
+			// base query
+			var dbquery = Title.where('_id').ne(id)
+
+			// 'relax' mode returns more recommendations
+			if(mode && mode.toLowerCase() === 'relax') {
+				dbquery.in('categories', categories);
+			} else {
+				dbquery.all('categories', categories);
+			}
+
+			// paging
+			dbquery
+			.sort('-releaseYear')
+			.skip(skip)
+			.limit(limit)
+			.select(FIELDS)
+
+			// execute query!
+			dbquery.exec(function(err, titles) {
+				if(err) helpers.sendError(res, err);
+				else helpers.send(res, titles);
+			});
+		}
+	});
+};
 
 
 // export

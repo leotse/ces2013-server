@@ -150,8 +150,13 @@ function saveTitle(json) {
 		var node = _.find(link, function(l) { return l.box_art; });
 		if(node) {
 			return _.map(node.box_art[0].link, function(boxart) { 
+
+				var title = boxart.$.title
+				,	index = title.indexOf('pix')
+				,	width = (index >= 0) ? title.substring(0, index) : 0;
+
 				return {
-					title: boxart.$.title,
+					width: width,
 					url: boxart.$.href
 				};
 			});

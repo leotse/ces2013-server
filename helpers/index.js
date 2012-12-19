@@ -11,7 +11,7 @@ helpers.sendError = function(res, err) {
 	var json = { 
 			meta: { 
 				code: 500,
-				error: err
+				error: err.message
 			}
 		};
 	res.send(json);

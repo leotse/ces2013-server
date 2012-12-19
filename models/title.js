@@ -21,7 +21,7 @@ var TitleSchema = new Schema({
 	averageRating: { type: Number },
 	updated: { type: Number, required: true, index: true },
 	boxArt: [{ 
-		title: { type: String, required: true },
+		width: { type: Number, required: true },
 		url: { type: String, required: true }
 	}],
 	synopsis: { type: String },

@@ -35,6 +35,7 @@ app.get('/api/titles', apiRoutes.titles);
 app.get('/api/movies', apiRoutes.movies);
 app.get('/api/tvshows', apiRoutes.tvshows);
 app.get('/api/genres/:genre', apiRoutes.genres);
+app.get('/api/similar/:id', apiRoutes.similar);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
