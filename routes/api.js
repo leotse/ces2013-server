@@ -9,7 +9,7 @@ var routes = {}
 
 
 var PAGE_SIZE = 10;
-var FIELDS = '_id synopsis synopsisShort updated averageRating releaseYear categories people boxart title';
+var FIELDS = '_id synopsis synopsisShort updated averageRating releaseYear categories people boxArt title';
 
 
 // test an api path
