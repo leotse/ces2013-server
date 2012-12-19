@@ -5,7 +5,8 @@ var config = {};
 
 
 // db connection string
-config.db = 'localhost:27017/ces2013';
+//config.db = 'localhost:27017/ces2013';
+config.db = 'mongodb://ces2013:ces2013@ds045757.mongolab.com:45757/ces2013';
 
 
 // netflix api

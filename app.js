@@ -33,6 +33,7 @@ app.get('/', routes.index);
 app.get('/api/test', apiRoutes.test);
 app.get('/api/titles', apiRoutes.titles);
 app.get('/api/movies', apiRoutes.movies);
+app.get('/api/genres/:genre', apiRoutes.genres);
 app.get('/api/tvshows', apiRoutes.tvshows);
 
 http.createServer(app).listen(app.get('port'), function(){

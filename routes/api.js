@@ -8,6 +8,9 @@ var routes = {}
 ,	Title = models.Title;
 
 
+var PAGE_SIZE = 10;
+
+
 // test an api path
 routes.test = function(req, res) {
 
@@ -33,7 +36,7 @@ routes.titles = function(req, res) {
 
 	var query = req.query
 	,	page = query.page || 1
-	,	limit = query.limit || 10
+	,	limit = query.limit || PAGE_SIZE
 	,	skip = (page - 1) * limit;
 
 	Title
@@ -52,7 +55,7 @@ routes.movies = function(req, res) {
 
 	var query = req.query
 	,	page = query.page || 1
-	,	limit = query.limit || 10
+	,	limit = query.limit || PAGE_SIZE
 	,	skip = (page - 1) * limit;
 
 	Title
@@ -72,7 +75,7 @@ routes.tvshows = function(req, res) {
 
 	var query = req.query
 	,	page = query.page || 1
-	,	limit = query.limit || 10
+	,	limit = query.limit || PAGE_SIZE
 	,	skip = (page - 1) * limit;
 
 	Title
@@ -85,6 +88,29 @@ routes.tvshows = function(req, res) {
 		else helpers.send(res, titles);
 	});
 };
+
+
+// get by genres
+routes.genres = function(req, res) {
+
+	var query = req.query
+	,	page = query.page || 1
+	,	limit = query.limit || PAGE_SIZE
+	,	skip = (page - 1) * limit
+	,	genre = req.params.genre
+	,	regex = new RegExp(genre);
+
+	Title
+	.find({ categories: regex })
+	.sort('-releaseYear')
+	.skip(skip)
+	.limit(limit)
+	.exec(function(err, titles) {
+		if(err) helpers.sendError(res, err);
+		else helpers.send(res, titles);
+	});
+
+}
 
 
 // export
