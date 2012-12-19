@@ -128,11 +128,18 @@ function saveTitle(json) {
 	}
 
 	function getReleaseYear() {
-		return catalogTitle.release_year[0];
+		var year = catalogTitle.release_year[0];
+		if(isFinite(year)) {
+			return year;
+		} else {
+			return 0;
+		}
 	}
 
 	function getAverageRating() {
-		return catalogTitle.average_rating[0];
+		if(catalogTitle.average_rating) {
+			return catalogTitle.average_rating[0];
+		}
 	}
 
 	function getUpdated() {
@@ -141,22 +148,32 @@ function saveTitle(json) {
 
 	function getBoxArt() {
 		var node = _.find(link, function(l) { return l.box_art; });
-		return _.map(node.box_art[0].link, function(boxart) { 
-			return {
-				title: boxart.$.title,
-				url: boxart.$.href
-			};
-		});
+		if(node) {
+			return _.map(node.box_art[0].link, function(boxart) { 
+				return {
+					title: boxart.$.title,
+					url: boxart.$.href
+				};
+			});
+		}
 	}
 
 	function getSynopsis() {
 		var node = _.find(link, function(l) { return l.synopsis; });
-		return node.synopsis[0];
+		if(node) {
+			return node.synopsis[0];
+		} else {
+			return null;
+		}
 	}
 
 	function getSynopsisShort() {
 		var node = _.find(link, function(l) { return l.short_synopsis; });
-		return node.short_synopsis[0];
+		if(node) {
+			return node.short_synopsis[0];
+		} else {
+			return null;
+		}
 	}
 
 	function getPeople() {
@@ -170,7 +187,11 @@ function saveTitle(json) {
 
 	function getSimilars() {
 		var node = _.find(link, function(l) { return l.$ && l.$.title === 'similars'; });
-		return node.$.href;
+		if(node) {
+			return node.$.href;
+		} else {
+			return null;
+		}
 	}
 
 	function getCategories() {

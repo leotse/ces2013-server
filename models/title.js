@@ -12,14 +12,14 @@ var mongoose = require('mongoose')
 
 var TitleSchema = new Schema({
 
-	id: { type: String, required: true, unique: true },
+	id: { type: String, required: true, unique: true, index: true },
 	title: {
 		short: { type: String, required: true },
 		regular: { type: String, require: true }
 	},
-	releaseYear: { type: Number, required: true },
+	releaseYear: { type: Number, required: true, index: true },
 	averageRating: { type: Number },
-	updated: { type: Number, required: true },
+	updated: { type: Number, required: true, index: true },
 	boxArt: [{ 
 		title: { type: String, required: true },
 		url: { type: String, required: true }
