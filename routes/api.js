@@ -67,7 +67,7 @@ routes.movies = function(req, res) {
 		if(err) helpers.sendError(res, err);
 		else helpers.send(res, titles);
 	});
-}
+};
 
 
 // get tv shows
@@ -94,18 +94,35 @@ routes.tvshows = function(req, res) {
 routes.genres = function(req, res) {
 
 	var query = req.query
+	,	type = query.type
 	,	page = query.page || 1
 	,	limit = query.limit || PAGE_SIZE
 	,	skip = (page - 1) * limit
-	,	genre = req.params.genre
-	,	regex = new RegExp(genre);
 
-	Title
-	.find({ categories: regex })
+	// filter by genre
+	var genre = req.params.genre
+	, 	regex = new RegExp(genre);
+
+	var  dbquery = Title.find({ categories: regex });
+
+	// filter by type (tv show or movies
+	if(type) {
+		if(type.toLowerCase() === 'tv') {
+			dbquery.regex('id', /series\/\d+$/);
+		} else if(type.toLowerCase() === 'movie') {
+			dbquery.regex('id', /movies/);
+		}
+	}
+
+	// paging
+	dbquery
 	.sort('-releaseYear')
 	.skip(skip)
-	.limit(limit)
-	.exec(function(err, titles) {
+	.limit(limit);
+
+
+	// execute query
+	dbquery.exec(function(err, titles) {
 		if(err) helpers.sendError(res, err);
 		else helpers.send(res, titles);
 	});
