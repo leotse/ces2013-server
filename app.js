@@ -31,6 +31,7 @@ app.get('/', routes.index);
 
 // api routes
 app.get('/api/test', apiRoutes.test);
+app.get('/api/featured', apiRoutes.featured);
 app.get('/api/titles', apiRoutes.titles);
 app.get('/api/titles/:id', apiRoutes.title);
 app.get('/api/movies', apiRoutes.movies);
