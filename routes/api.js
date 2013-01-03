@@ -53,6 +53,33 @@ routes.titles = function(req, res) {
 };
 
 
+// gets the featured content
+routes.featured = function(req, res) {
+
+	var ids = [
+		'50d1f4f5035ae6b43f04655e',
+		'50d1f4e2035ae6b43f03c96e',
+		'50d1f517035ae6b43f05768a',
+		'50d1f517035ae6b43f05767a',
+		'50d1f4f6035ae6b43f04667e',
+		'50d1f4e2035ae6b43f03c8fe',
+		'50d1f4e1035ae6b43f03c19a',
+		'50d1f4e2035ae6b43f03c99a',
+		'50d1f4ed035ae6b43f0425b2',
+		'50d1f4e2035ae6b43f03c88e'
+	];
+
+	Title
+	.find({})
+	.where('_id').in(ids)
+	.sort('-releaseYear')
+	.exec(function(err, titles) {
+		if(err) helpers.sendError(res, err);
+		else helpers.send(res, titles);
+	});
+}
+
+
 // get title details
 routes.title = function(req, res) {
 
