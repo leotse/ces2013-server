@@ -7,6 +7,7 @@ var helpers = {};
 //////////////////////////////////
 // Request and Response Helpers //
 //////////////////////////////////
+
 helpers.sendError = function(res, err) {
 	var json = { 
 			meta: { 
@@ -27,6 +28,20 @@ helpers.send = function(res, result) {
 	}
 	res.send(json);
 };
+
+
+//////////////////
+// Misc Helpers //
+//////////////////
+
+
+helpers.env = function() {
+	if(process.env.PORT) {
+		return 'prod';
+	} else {
+		return 'dev';
+	}
+}
 
 
 ////////////////////

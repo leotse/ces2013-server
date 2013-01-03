@@ -56,18 +56,35 @@ routes.titles = function(req, res) {
 // gets the featured content
 routes.featured = function(req, res) {
 
-	var ids = [
-		'50d1f4f5035ae6b43f04655e',
-		'50d1f4e2035ae6b43f03c96e',
-		'50d1f517035ae6b43f05768a',
-		'50d1f517035ae6b43f05767a',
-		'50d1f4f6035ae6b43f04667e',
-		'50d1f4e2035ae6b43f03c8fe',
-		'50d1f4e1035ae6b43f03c19a',
-		'50d1f4e2035ae6b43f03c99a',
-		'50d1f4ed035ae6b43f0425b2',
-		'50d1f4e2035ae6b43f03c88e'
-	];
+	// different ids for dev and prod
+	var ids;
+	if(helpers.env() === 'dev') {
+		ids = [
+			'50d1f4f5035ae6b43f04655e',
+			'50d1f4e2035ae6b43f03c96e',
+			'50d1f517035ae6b43f05768a',
+			'50d1f517035ae6b43f05767a',
+			'50d1f4f6035ae6b43f04667e',
+			'50d1f4e2035ae6b43f03c8fe',
+			'50d1f4e1035ae6b43f03c19a',
+			'50d1f4e2035ae6b43f03c99a',
+			'50d1f4ed035ae6b43f0425b2',
+			'50d1f4e2035ae6b43f03c88e'
+		];
+	} else {
+		ids = [
+			'50d208481f46edd74004667e',
+			'50d207f61f46edd74003c8fe',
+			'50d207f61f46edd74003c96e',
+			'50d208461f46edd74004655e',
+			'50d207f61f46edd74003c99a',
+			'50d207f61f46edd74003c88e',
+			'50d208201f46edd7400425b2',
+			'50d208de1f46edd74005767a',
+			'50d208de1f46edd74005768a',
+			'50d207f51f46edd74003c19a'
+		];
+	}
 
 	Title
 	.find({})
