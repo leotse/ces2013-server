@@ -14,8 +14,8 @@ var TitleSchema = new Schema({
 
 	id: { type: String, required: true, unique: true, index: true },
 	title: {
-		short: { type: String, required: true },
-		regular: { type: String, require: true }
+		short: { type: String, required: true, index: true },
+		regular: { type: String, require: true, index: true }
 	},
 	releaseYear: { type: Number, required: true, index: true },
 	averageRating: { type: Number },
