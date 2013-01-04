@@ -246,12 +246,16 @@ routes.similar = function(req, res) {
 			// base query
 			var dbquery = Title.where('_id').ne(id)
 
+			// only return title level items
+			dbquery.or([ { id: { $regex: /movies/ } }, { id: { $regex: /series\/\d+$/ }} ]);
+
 			// 'relax' mode returns more recommendations
-			if(mode && mode.toLowerCase() === 'relax') {
-				dbquery.in('categories', categories);
-			} else {
-				dbquery.all('categories', categories);
-			}
+			// if(mode && mode.toLowerCase() === 'relax') {
+			// 	dbquery.in('categories', categories);
+			// } else {
+			// 	dbquery.all('categories', categories);
+			// }
+			dbquery.in('categories', categories);
 
 			// paging
 			dbquery
