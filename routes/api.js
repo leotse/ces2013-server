@@ -244,7 +244,7 @@ routes.similar = function(req, res) {
 			,	skip = (page - 1) * limit;
 
 			// base query
-			var dbquery = Title.where('_id').ne(id)
+			var dbquery = Title.where('_id').ne(id);
 
 			// only return title level items
 			dbquery.or([ { id: { $regex: /movies/ } }, { id: { $regex: /series\/\d+$/ }} ]);
@@ -262,17 +262,22 @@ routes.similar = function(req, res) {
 			.sort('-releaseYear')
 			.skip(skip)
 			.limit(limit)
-			.select(FIELDS)
+			.select(FIELDS);
 
 			// execute query!
 			dbquery.exec(function(err, titles) {
 				if(err) helpers.sendError(res, err);
-				else helpers.send(res, titles);
+				else if(titles && titles.length > 0) helpers.send(res, titles);
+				else {
+
+					// no related, just return the featured shows
+					routes.featured(req, res);					
+
+				}
 			});
 		}
 	});
 };
-
 
 // export
 module.exports = routes;
