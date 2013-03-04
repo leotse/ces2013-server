@@ -15,6 +15,8 @@
     "request": "2.12.x",
     "xml2js": "0.2.x",
     "mongoose": "3.5.x",
-    "underscore": "1.4.x"
+    "underscore": "1.4.x",
+    "passport": "0.1.16",
+    "passport-local": "0.1.6"
   }
 }
