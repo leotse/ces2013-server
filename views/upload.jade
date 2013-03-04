@@ -1,0 +1,12 @@
+extends layout
+
+block content
+	form(action="/admin/upload", method="post", enctype="multipart/form-data")
+		div
+			label(for="logo") logo: 
+			input(type="file", name="logo")
+		div
+			label(for="background") background: 
+			input(type="file", name="background")
+		div
+			input(type="submit")

@@ -22,7 +22,7 @@ app.configure(function(){
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.cookieParser());
-  app.use(express.bodyParser());
+  app.use(express.bodyParser({ uploadDir: './uploaded' }));
   app.use(express.methodOverride());
   app.use(express.session({ secret: 'some random secret damn son - lk2i3lk#opikj#KLj3lkjl' }));
   app.use(passport.initialize());
@@ -56,18 +56,25 @@ passport.deserializeUser(function(id, done) {
 
 
 // init authentication
+app.all('/admin*', function(req, res, next) {
+  if(req && req.user) { next(); }
+  else { res.redirect('/login'); }
+});
+
 app.post('/login', passport.authenticate('local', {
   successRedirect: '/admin',
   failureRedirect: '/login'
 }));
 
-
 // general routes
 app.get('/', routes.index);
+app.get('/test', routes.test);
 app.get('/login', routes.login);
 
 // admin routes
 app.get('/admin', adminRoutes.index);
+app.get('/admin/upload', adminRoutes.uploadPage);
+app.post('/admin/upload', adminRoutes.upload);
 
 // api routes
 app.get('/api/test', apiRoutes.test);
