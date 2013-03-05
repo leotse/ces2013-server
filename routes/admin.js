@@ -53,11 +53,11 @@ function saveUploadedFiles(uploadedFiles, callback) {
 	,	logo = uploadedFiles.logo;
 
 	var files = [{
-		path: ".\\" + background.path,
+		path: "./" + background.path,
 		filename: "background",
 		contentType: background.mime
 	}, {
-		path: ".\\" + logo.path,
+		path: "./" + logo.path,
 		filename: "logo",
 		contentType: logo.mime
 	}];
