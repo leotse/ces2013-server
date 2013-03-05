@@ -63,7 +63,7 @@ app.all('/admin*', function(req, res, next) {
 });
 
 app.post('/login', passport.authenticate('local', {
-  successRedirect: '/admin',
+  successRedirect: '/admin/upload',
   failureRedirect: '/login'
 }));
 

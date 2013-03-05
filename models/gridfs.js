@@ -52,15 +52,14 @@ files.saveFile = function(local, filename, contenttype, callback) {
 	else if(!local || !filename || !contenttype || !callback) throw new Error("local, filename, contenttype and callback are required");
 	else {
 
-		var file = new GridStore(db, filename, "w", {
+		var gs = new GridStore(db, filename, "w", {
 			"content_type": contenttype
 		});
 		
-		wow.open(function(err, obj) {
-
+		gs.open(function(err, obj) {
 			if(err) callback(err);
 			else {
-				wow.writeFile(local, function(err, obj) {
+				gs.writeFile(local, function(err, obj) {
 					if(err) callback(err);
 					else callback(null, obj);
 				});
