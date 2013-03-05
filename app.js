@@ -7,6 +7,7 @@ var express = require('express')
   , routes = require('./routes')
   , adminRoutes = require('./routes/admin')
   , apiRoutes = require('./routes/api')
+  , resourceRoutes = require('./routes/resource')
   , http = require('http')
   , path = require('path')
   , passport = require('passport')
@@ -85,6 +86,10 @@ app.get('/api/movies', apiRoutes.movies);
 app.get('/api/tvshows', apiRoutes.tvshows);
 app.get('/api/genres/:genre', apiRoutes.genres);
 app.get('/api/similar/:id', apiRoutes.similar);
+
+// app resources routes
+app.get('/resource/logo', resourceRoutes.logo)
+app.get('/resource/background', resourceRoutes.background);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
