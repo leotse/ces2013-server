@@ -13,29 +13,38 @@ exports.index = function(req, res) {
 };
 
 exports.uploadPage = function(req, res) {
-	res.render('upload');
+	var type = getType(req);
+
+	// make sure type is present
+	if(!type) helpers.sendError(res, "type required");
+	else res.render('upload', { type: type });
 };
 
 exports.upload = function(req, res) {
-	var files = req.files;
+	var files = req.files
+	,	type = getType(req);
+
+	// ensure valid route
+	if(!type) helpers.sendError(res, "type required");
 
 	// error checking
 	if(!files || Object.keys(files).length !== 2) helpers.sendError(res, new Error("i am expecting 2 files!"));
 	else {
+		var prefix = type + "_";
 
 		// save the files to gridfs
-		saveUploadedFiles(files, function(err, saved) {
+		saveUploadedFiles(files, prefix, function(err, saved) {
 			if(err) {
 				helpers.sendError(res, err);
 				console.log("===== error occurred while saving files =====");
 				console.log(err);
 			} else {
 
+				// just respond, no need to wait for the clean up to complete
 				helpers.send(res, 'done');
 
 				// finally delete the files!
 				deleteUploadedFiles(files);
-
 			}
 		});
 	}
@@ -46,7 +55,18 @@ exports.upload = function(req, res) {
 // Helpers //
 /////////////
 
-function saveUploadedFiles(uploadedFiles, callback) {
+function getType(req) {
+	var url = req.url;
+
+	if(url && url.toLowerCase().indexOf("ios") >= 0) {
+		return "ios";
+	} else if(url && url.toLowerCase().indexOf("android") >= 0) {
+		return "android";
+	}
+	return null;
+}
+
+function saveUploadedFiles(uploadedFiles, prefix, callback) {
 
 	var files = null
 	,	background = uploadedFiles.background
@@ -54,11 +74,11 @@ function saveUploadedFiles(uploadedFiles, callback) {
 
 	var files = [{
 		path: "./" + background.path,
-		filename: "background",
+		filename: prefix + "background",
 		contentType: background.mime
 	}, {
 		path: "./" + logo.path,
-		filename: "logo",
+		filename: prefix + "logo",
 		contentType: logo.mime
 	}];
 

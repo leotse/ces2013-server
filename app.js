@@ -63,7 +63,7 @@ app.all('/admin*', function(req, res, next) {
 });
 
 app.post('/login', passport.authenticate('local', {
-  successRedirect: '/admin/upload',
+  successRedirect: '/admin',
   failureRedirect: '/login'
 }));
 
@@ -74,8 +74,10 @@ app.get('/login', routes.login);
 
 // admin routes
 app.get('/admin', adminRoutes.index);
-app.get('/admin/upload', adminRoutes.uploadPage);
-app.post('/admin/upload', adminRoutes.upload);
+app.get('/admin/ios/upload', adminRoutes.uploadPage);
+app.get('/admin/android/upload', adminRoutes.uploadPage);
+app.post('/admin/ios/upload', adminRoutes.upload);
+app.post('/admin/android/upload', adminRoutes.upload);
 
 // api routes
 app.get('/api/test', apiRoutes.test);
@@ -88,8 +90,10 @@ app.get('/api/genres/:genre', apiRoutes.genres);
 app.get('/api/similar/:id', apiRoutes.similar);
 
 // app resources routes
-app.get('/resource/logo', resourceRoutes.logo)
-app.get('/resource/background', resourceRoutes.background);
+app.get('/resource/ios/logo', resourceRoutes.ios.logo)
+app.get('/resource/ios/background', resourceRoutes.ios.background);
+app.get('/resource/android/logo', resourceRoutes.android.logo)
+app.get('/resource/android/background', resourceRoutes.android.background);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
