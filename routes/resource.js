@@ -3,12 +3,11 @@
 ////////////////
 var routes = {}
 ,	models = require('../models')
-,	Title = models.Title;
+,	GridFS = models.GridFS;
 
 // gets the current logo
 routes.logo = function(req, res) {
-	
-	models.getFile("wer.jpg", function(err, stream) {
+	GridFS.getFile("wer.jpg", function(err, stream) {
 		if(err) helpers.sendError(res, err);
 		else stream.pipe(res);
 	});
@@ -16,7 +15,7 @@ routes.logo = function(req, res) {
 
 // gets the current background
 routes.background = function(req, res) {
-	models.getFile("wer.jpg", function(err, stream) {
+	GridFS.getFile("wer.jpg", function(err, stream) {
 		if(err) helpers.sendError(res, err);
 		else stream.pipe(res);
 	});

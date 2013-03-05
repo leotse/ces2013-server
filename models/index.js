@@ -4,9 +4,9 @@
 
 var mongoose = require('mongoose')
 ,	config = require('../config')
+,	GridFS = require('./gridfs')
 ,	conn = null
 ,	db = null
-,	gs = null
 ,	models = {};
 
 
@@ -16,22 +16,9 @@ mongoose.connection.on('open', function(err) {
 	if(err) throw err;
 	else {
 		db = mongoose.connection.db;
-		gs = conn.mongo.GridStore;
 
-		var wow = new gs(db, "wer.jpg", "w", {
-			"content_type": "image/jpg",
-			"metadata": "google doodle"
-		});
-		wow.open(function(err, obj) {
-
-			if(err) throw err
-			else {
-				wow.writeFile('./uploaded/google.jpg', function(err, obj) {
-					if(err) throw err;
-					else console.log('done writing file!');
-				});
-			}
-		});
+		// initialize the file storage module
+		GridFS.init(conn, db);
 	}
 });
 
@@ -39,27 +26,10 @@ mongoose.connection.on('open', function(err) {
 // title schema
 var TitleSchema = require('./title');
 mongoose.model('Title', TitleSchema);
+models.Title = mongoose.model('Title');
 
-
-// to retrieve files
-module.exports.getFile = function(filename, callback) {
-
-	if(!filename || !callback) throw new Error("filename and callback are required");
-	else {
-
-		var file = new gs(db, filename, "r");
-		file.open(function(err, gs) {
-
-			if(err) callback(err);
-			else {
-				var stream = gs.stream(true);
-				callback(null, stream);
-			}
-		});
-	}
-};
-
-
+// and file storage module
+models.GridFS = GridFS;
 
 // export
-module.exports.Title = mongoose.model('Title');
+module.exports = models;
