@@ -75,8 +75,10 @@ app.get('/login', routes.login);
 // admin routes
 app.get('/admin', adminRoutes.index);
 app.get('/admin/ios/upload', adminRoutes.uploadPage);
+app.get('/admin/ios_retina/upload', adminRoutes.uploadPage);
 app.get('/admin/android/upload', adminRoutes.uploadPage);
 app.post('/admin/ios/upload', adminRoutes.upload);
+app.post('/admin/ios_retina/upload', adminRoutes.upload);
 app.post('/admin/android/upload', adminRoutes.upload);
 
 // api routes
@@ -92,6 +94,8 @@ app.get('/api/similar/:id', apiRoutes.similar);
 // app resources routes
 app.get('/resource/ios/logo', resourceRoutes.ios.logo)
 app.get('/resource/ios/background', resourceRoutes.ios.background);
+app.get('/resource/ios_retina/logo', resourceRoutes.iosRetina.logo)
+app.get('/resource/ios_retina/background', resourceRoutes.iosRetina.background);
 app.get('/resource/android/logo', resourceRoutes.android.logo)
 app.get('/resource/android/background', resourceRoutes.android.background);
 

@@ -58,7 +58,9 @@ exports.upload = function(req, res) {
 function getType(req) {
 	var url = req.url;
 
-	if(url && url.toLowerCase().indexOf("ios") >= 0) {
+	if(url && url.toLowerCase().indexOf("ios_retina") >= 0) {
+		return "ios_retina";
+	} else if(url && url.toLowerCase().indexOf("ios") >= 0) {
 		return "ios";
 	} else if(url && url.toLowerCase().indexOf("android") >= 0) {
 		return "android";

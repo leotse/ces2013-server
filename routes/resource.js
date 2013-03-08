@@ -7,6 +7,7 @@ var routes = {}
 ,	helpers = require('../helpers');
 
 routes.ios = {};
+routes.iosRetina = {};
 routes.android = {};
 
 // ios logo
@@ -17,6 +18,16 @@ routes.ios.logo = function(req, res) {
 // ios background
 routes.ios.background = function(req, res) {
 	streamFile(res, "ios_background");
+};
+
+// ios retina logo
+routes.iosRetina.logo = function(req, res) {
+	streamFile(res, "ios_retina_logo");
+};
+
+// ios retina background
+routes.iosRetina.background = function(req, res) {
+	streamFile(res, "ios_retina_background");
 };
 
 // android logo
