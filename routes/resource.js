@@ -48,7 +48,10 @@ routes.android.background = function(req, res) {
 function streamFile(res, filename, callback) {
 	GridFS.getFile(filename, function(err, stream) {
 		if(err) helpers.sendError(res, err);
-		else stream.pipe(res);
+		else { 
+			res.setHeader('Content-Type', stream.gstore.contentType);
+			stream.pipe(res);
+		}
 	});
 }
 

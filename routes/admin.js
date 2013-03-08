@@ -118,7 +118,7 @@ function deleteUploadedFiles(uploadedFiles) {
 	});
 
 	function deleteFile(file, done) {
-		var path = '.\\' + file.path;
+		var path = './' + file.path;
 		fs.unlink(path, function(err) {
 
 			// report deletion is completed!
