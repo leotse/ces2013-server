@@ -17,7 +17,10 @@ exports.uploadPage = function(req, res) {
 
 	// make sure type is present
 	if(!type) helpers.sendError(res, "type required");
-	else res.render('upload', { type: type });
+	else res.render('upload', { 
+		type: type,
+		typename: getTypeName(type)
+	});
 };
 
 exports.upload = function(req, res) {
@@ -64,6 +67,17 @@ function getType(req) {
 		return "ios";
 	} else if(url && url.toLowerCase().indexOf("android") >= 0) {
 		return "android";
+	}
+	return null;
+}
+
+function getTypeName(type) {
+	if(type && type.toLowerCase().indexOf("ios_retina") >= 0) {
+		return "iOS Retina";
+	} else if(type && type.toLowerCase().indexOf("ios") >= 0) {
+		return "iOS";
+	} else if(type && type.toLowerCase().indexOf("android") >= 0) {
+		return "Android";
 	}
 	return null;
 }

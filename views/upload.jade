@@ -1,13 +1,13 @@
 extends layout
 
 block content
-	h1 upload #{type} images
+	h1 Upload #{typename} Images
 	form(action="/admin/#{type}/upload", method="post", enctype="multipart/form-data")
 		div
-			label(for="logo") logo: 
+			label(for="logo") Logo: 
 			input(type="file", name="logo")
 		div
-			label(for="background") background: 
+			label(for="background") Background: 
 			input(type="file", name="background")
 		div
 			input(type="submit")
